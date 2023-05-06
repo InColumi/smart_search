@@ -24,8 +24,7 @@ def get_author_and_title(id_book: int):
                         .join(Book_authors, on=(Book_authors.ref_authors_id==Author.int_id), join_type=JOIN.INNER)\
                         .join(Titles, on=(Titles.int_book_id==Book_authors.ref_book_id), join_type=JOIN.INNER)\
                         .where(Book_authors.ref_book_id == id_book).dicts()
-    for i in data:
-        print(i)
+    return data[:1]
 
 
 def get_bench_text(text, size_bench):
@@ -36,21 +35,6 @@ def get_bench_text(text, size_bench):
             text[index * size_bench: size_bench + index * size_bench] for index in range(math.ceil(count_bench)))
     else:
         return [text]
-
-
-def insert_to_meta_data(id_gutenberg):
-    # # INSERT IN TABLE META
-    # json_data = json.dumps(get_meta_data(id_gutenberg))
-    author = ' / '.join(tuple(get_metadata('author', id_gutenberg)))
-    title = ' '.join(tuple(get_metadata('title', id_gutenberg)))
-    meta = Meta_data(gutenberg_id=str(id_gutenberg),
-                     author=author,
-                     title=title)
-    max_id_meta_data = Meta_data.insert(gutenberg_id=meta.gutenberg_id,
-                                        author=meta.author,
-                                        title=meta.title,
-                                        json_data=meta.json_data).execute()
-    return max_id_meta_data
 
 
 def create_ners(ners, id_ner, entity, max_id_context, max_id_meta_data, delta):
@@ -74,14 +58,14 @@ def create_ners(ners, id_ner, entity, max_id_context, max_id_meta_data, delta):
     return id_ner
 
 
-def insert_data(text, nlp, id_gutenberg):
+def insert_data(text: str, nlp, id_book: int):
     print('In insert_data')
     size_bench = 100000
     bench_text = get_bench_text(text, size_bench=size_bench)
     print("Count bench: ", len(bench_text), 'Size bench:', size_bench, " Size text: ", len(text))
 
     # max_id_meta_data = insert_to_meta_data(id_gutenberg)
-    max_id_meta_data = id_gutenberg
+    max_id_meta_data = id_book
     for index_bench, item_text in enumerate(bench_text):
         print(index_bench + 1)
         delta = index_bench * size_bench

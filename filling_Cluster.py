@@ -39,7 +39,7 @@ def get_clear_ner(ners, stop_words: set) -> list:
 def clust(context, model: SentenceTransformer):
     embeddings = model.encode(context,
                               batch_size=64,
-                              show_progress_bar=True,
+                              show_progress_bar=False,
                               convert_to_tensor=True)
     clusters = util.community_detection(embeddings,
                                         min_community_size=1,
@@ -50,12 +50,15 @@ def clust(context, model: SentenceTransformer):
 def get_second_level_clusters(cluster_clusters: defaultdict, context_clusters: defaultdict, model: SentenceTransformer):
     second_level_clusters = []
     embed_list = []
+    print('get_second_level_clusters. total_count: ', len(context_clusters.values()))
+    count = 1
     for indexes, contexts in zip(cluster_clusters.values(), context_clusters.values()):
         if len(indexes) <= 3:
             continue
         try:
             item, embed = clust(contexts, model)
-
+            print(count)
+            count += 1
         except Exception as e:
             print(str(e))
             continue
@@ -245,7 +248,7 @@ def main():
         except:
             raise Exception('Connection error!')
         
-        # nlp = spacy.load("en_core_web_sm")
+        nlp = spacy.load("en_core_web_sm")
 
         try:
             stop_words = set(stopwords.words("english"))
@@ -254,7 +257,6 @@ def main():
             nltk.download('stopwords')
             stop_words = set(stopwords.words("english"))
             
-        print(type(stop_words))
         try:
             model_for_clusters = SentenceTransformer('all-MiniLM-L6-v2')
             model_for_imp_words = KeyedVectors.load("glove-wiki-gigaword-200")
@@ -280,6 +282,14 @@ def main():
                     else:
                         count += 1
                         continue
+                print(f'Book with id: {id_book} not exist in DataBase.')
+                text = get_text_by_path(os.path.join(path, file))
+                if not text:
+                   print("Text is empty")
+                   continue
+                start_time = datetime.now()
+                insert_data(text, nlp, id_book)
+                print('Time inserting book in DataBase: {}'.format(datetime.now() - start_time))
                 start_time = datetime.now()
                 insert_in_clusert(id_book, model_for_clusters, model_for_imp_words, stop_words)
                 print('Insert in cluster: {}'.format(datetime.now() - start_time))

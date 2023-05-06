@@ -1,19 +1,7 @@
 from peewee import TextField, Model, PrimaryKeyField, \
                     CharField, IntegerField, \
-                    ForeignKeyField, InternalError
+                    ForeignKeyField
 from connect_to_database import DB
-import json
-
-
-# class JSONField(TextField):
-#     """Class for json field"""
-
-#     def db_value(self, value):
-#         return json.dumps(value)
-
-#     def python_value(self, value):
-#         if value is not None:
-#             return json.loads(value)
 
 
 class BaseModel(Model):
@@ -29,7 +17,6 @@ class Meta_data(BaseModel):
     gutenberg_id = CharField(max_length=10)
     author = CharField(null=True, max_length=1000)
     title = CharField(max_length=1000)
-    # json_data = JSONField()
 
     def __str__(self):
         return f"{self.id}, {self.gutenberg_id}, {self.author}, {self.title}"
@@ -81,5 +68,3 @@ class Ner(BaseModel):
 
     class Meta:
         table_name = 'Ner'
-
-

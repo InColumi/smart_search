@@ -1,4 +1,7 @@
-from models import Context, Cluster, Ner
+from models.context import Context
+from models.ner import Ner
+from models.cluster import Cluster
+
 from connect_to_database import DB
 from peewee import InternalError
 

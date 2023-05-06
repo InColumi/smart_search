@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 texts/
+glove-wiki-gigaword-200*

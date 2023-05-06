@@ -56,7 +56,7 @@ class Ner(BaseModel):
     """Table with ner ifo"""
     id = PrimaryKeyField()
     context_id = ForeignKeyField(Context, related_name='context')
-    book_id = ForeignKeyField(Meta_data, related_name='meta_data')
+    book_id = IntegerField(null=False)
     cluster_id = ForeignKeyField(Cluster, related_name='cluster', null=True)
     value = CharField(max_length=500, index=True)
     start = IntegerField()

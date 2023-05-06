@@ -6,9 +6,9 @@ from peewee import fn, chunked, JOIN
 
 import math
 import json
-from models.authors import Author
-from models.book_authors import Book_authors
-from models.titles import Titles
+# from models.authors import Author
+# from models.book_authors import Book_authors
+# from models.titles import Titles
 # def get_meta_data(id_book):
 #     """Get meta data by id"""
 #     fields = ('author', 'formaturi', 'language', 'rights', 'subject', 'title')
@@ -18,13 +18,13 @@ from models.titles import Titles
 #         data[field] = ['null'] if len(metadata) == 0 else metadata
 #     return data
 
-def get_author_and_title(id_book: int): 
+# def get_author_and_title(id_book: int): 
 
-    data = Author.select(Author.name.alias('author_name'), Titles.name.alias('title_name'))\
-                        .join(Book_authors, on=(Book_authors.ref_authors_id==Author.int_id), join_type=JOIN.INNER)\
-                        .join(Titles, on=(Titles.int_book_id==Book_authors.ref_book_id), join_type=JOIN.INNER)\
-                        .where(Book_authors.ref_book_id == id_book).dicts()
-    return data[:1]
+#     data = Author.select(Author.name.alias('author_name'), Titles.name.alias('title_name'))\
+#                         .join(Book_authors, on=(Book_authors.ref_authors_id==Author.int_id), join_type=JOIN.INNER)\
+#                         .join(Titles, on=(Titles.int_book_id==Book_authors.ref_book_id), join_type=JOIN.INNER)\
+#                         .where(Book_authors.ref_book_id == id_book).dicts()
+#     return data[:1]
 
 
 def get_bench_text(text, size_bench):

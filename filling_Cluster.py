@@ -57,14 +57,15 @@ def get_second_level_clusters(cluster_clusters: defaultdict, context_clusters: d
             continue
         try:
             item, embed = clust(contexts, model)
-            print(count)
-            count += 1
+            
         except Exception as e:
             print(str(e))
             continue
         if item != []:
             second_level_clusters.append([item, indexes])
             embed_list.append(embed)
+        print(count)
+        count += 1
     return second_level_clusters, embed_list
 
 

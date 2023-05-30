@@ -10,6 +10,10 @@ from filling_Meta_Ner_Context import insert_data, get_text_by_path
 from sentence_transformers import SentenceTransformer, util
 from config import settings
 
+from models.test import Test
+from models.centroid import Centroid
+import statistics
+
 import os
 import re
 import sys
@@ -18,6 +22,8 @@ import spacy
 import torch
 import gensim.downloader as api
 import peewee
+
+from torch import Tensor
 # from spacy.compat import cupy as cp
 # import cupy as cp
 # from thinc.api import set_gpu_allocator, require_gpu
@@ -25,25 +31,46 @@ import peewee
 
 from peewee import fn, JOIN
 
-def review_to_words(ner, stop_words):
-    ner = ner.replace('\n', '')
-    letters_only = re.sub("[0-9\.‚,+=:‘ˆ†;“”’–—\-_\"\'\\@!~#&$%*()+?|\{\}^`<>\/[\]]", " ", ner)
-    words = letters_only.lower().split()
-    return [w for w in words if not w in stop_words]
+def remove_articles(sentence):
+    # Паттерн для определения артиклей
+    pattern = r'\b(a|an|the)\b'
+
+    # Удаление артиклей из предложения
+    sentence_without_articles = re.sub(pattern, '', sentence, flags=re.IGNORECASE)
+    
+    return sentence_without_articles
+
+def clear_text(text: str, old, new):
+    result = text
+    while result.find(old) != -1:
+        result = result.replace(old, new)
+    return result.replace(old, new)
+
+def review_to_words(text: str, stop_words):
+    text = re.sub(r'[\n\t]', ' ', text) 
+    text = remove_articles(text)
+    letters_only = re.sub("[\.‚,+=:‘ˆ†;“”’–—\-_\"\\@!~#&$%*()+?|\{\}^`<>\/[\]]", " ", text)
+    text = clear_text(letters_only, '  ', ' ')
+    text = text.strip().lower()
+    words = text.split(' ')
+    words_without_stop_words = [w for w in words if w not in stop_words]
+    return ' '.join(words_without_stop_words)
+     
+
 
 
 def get_clear_ner(ners, stop_words: set) -> list:
     return [(review_to_words(ner[0], stop_words), ner[1], ner[2]) for ner in ners]
 
 
-def clust(context, model: SentenceTransformer):
+def clust(context, model: SentenceTransformer, threshold):
     embeddings = model.encode(context,
                               batch_size=64,
-                              show_progress_bar=False,
+                              show_progress_bar=True,
                               convert_to_tensor=True)
     clusters = util.community_detection(embeddings,
                                         min_community_size=1,
-                                        threshold=0.5)
+                                        threshold=threshold)
     return clusters, embeddings
 
 
@@ -56,7 +83,7 @@ def get_second_level_clusters(cluster_clusters: defaultdict, context_clusters: d
         if len(indexes) <= 3:
             continue
         try:
-            item, embed = clust(contexts, model)
+            item, embed = clust(contexts, model, 0.5)
             
         except Exception as e:
             print(str(e))
@@ -166,7 +193,13 @@ def insert_new_cluster(cluster):
     id_cluster = Cluster.insert(word=c.word,
                                 centroid=c.centroid,
                                 size=c.size).execute()
+    # print(id_cluster)
     Ner.update(cluster_id=id_cluster).where(Ner.id == cluster.id_ner).execute()
+
+# def get_first_level_clusters(ners, model_for_clusters):
+#      item, embed = clust(ners, model_for_clusters, 0.8)
+#      print(item)
+
 
 
 def insert_in_clusert(book_id: int, model_for_clusters: SentenceTransformer, model_for_imp_words, stop_words: set):
@@ -176,23 +209,24 @@ def insert_in_clusert(book_id: int, model_for_clusters: SentenceTransformer, mod
                 .where(Ner.book_id == book_id)
     new_ner = [(ner.value, ner.id, ner.context_id.context) for ner in table_ner]
     
-    cleared_ner = get_clear_ner(new_ner, stop_words)
+    # cleared_ner = get_clear_ner(new_ner, stop_words)
     
-    print('get_important_words')
-    important_words = get_important_words(cleared_ner, model_for_imp_words)
-    print('important_words', len(important_words))
-    print('get_new_clusters_by_important_words')
-    id_clusters, context_clusters = get_new_clusters_by_important_words(important_words)
-    print('id_clusters', len(id_clusters), 'context_clusters', len(context_clusters))
-    print('get_second_level_clusters')
-
+    # print('get_important_words')
+    # important_words = get_important_words(cleared_ner, model_for_imp_words)
+    # print('important_words', len(important_words))
+    # print('get_new_clusters_by_important_words')
+    # id_clusters, context_clusters = get_new_clusters_by_important_words(important_words)
+    # print('id_clusters', len(id_clusters), 'context_clusters', len(context_clusters))
+    # print('get_second_level_clusters')
+    # print(context_clusters)
+    # # return
     second_level_clusters, embed_list = get_second_level_clusters(id_clusters, context_clusters, model_for_clusters)
     print('second_level_clusters', len(second_level_clusters), len(embed_list))
     print('get_absolute_index')
     absolute_index, absolute_embed_list = get_absolute_index(second_level_clusters, embed_list)
 
     new_clusters = []
-    print(len(absolute_index), len(absolute_embed_list))
+
     id_cluster = Cluster.select(fn.MAX(Cluster.id)).scalar()
     if id_cluster is None:
         id_cluster = 0
@@ -296,7 +330,110 @@ def main():
                 print('Insert in cluster: {}'.format(datetime.now() - start_time))
                 print('==================================================================')
                 count += 1
-                # break
+                break
+            except Exception as e:
+                print(f"Error in {file}...")
+                print(str(e))
+                break
+    except peewee.OperationalError as e:
+        print('peewee.OperationalError')
+        print(str(e))
+    except Exception as e:
+        print('Exception')
+        print(str(e))
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+
+def get_bunch_text(text, size):
+    import math
+    size_text = len(text)
+    count_bunch = float(size_text / size)
+    if count_bunch >= 1.0:
+        return tuple(
+            text[index * size: size + index * size] for index in range(math.ceil(count_bunch)))
+    else:
+        return [text]
+
+def get_sentences(text, model_nlp):
+    size_bench = 1000000
+    bunchs_text = get_bunch_text(text, size_bench)
+    sentences = []
+    for bunch in bunchs_text:
+        doc = model_nlp(bunch)
+        tuple(sentences.append(sentence) for sentence in doc.sents if len(sentence) > 10)
+    return sentences
+
+def smart_cluster(sentences, model, id_book):
+    clusters, embeddings = clust(sentences, model, 0.6)
+    
+    # for i in clusters:
+    #     print(i)
+    # print('-------------------------------------------------------------------------------------------')
+    for cluster in clusters:
+        embedding_cluster = [embeddings[i] for i in cluster]
+        centroid = sum(embedding_cluster) / len(cluster)
+        centroid_str = ','.join(list(map(lambda i: str(i), centroid.tolist())))
+        centroid_db = Centroid(value=centroid_str)
+        centroid_db.save()
+        
+        sentences_for_db = [sentences[i] for i in cluster]
+        for sent in sentences_for_db:
+            test = Test(context=sent, id_book=id_book, centroid_id=centroid_db.id)
+            test.save()
+
+def good_main():
+    try:
+        try:
+            DB.connect()
+            print('Connection succes!')
+        except:
+            raise Exception('Connection error!')
+        
+        nlp = spacy.load("en_core_web_sm")
+
+        try:
+            stop_words = set(stopwords.words("english"))
+        except Exception as e:
+            print(str(e))
+            nltk.download('stopwords')
+            stop_words = set(stopwords.words("english"))
+            
+        try:
+            model_for_clusters = SentenceTransformer('all-MiniLM-L6-v2')
+            model_for_imp_words = KeyedVectors.load("glove-wiki-gigaword-200")
+        except Exception as e:
+            print(str(e))
+            model_for_imp_words = api.load('glove-wiki-gigaword-200')
+            model_for_imp_words.save("glove-wiki-gigaword-200")
+
+        path = settings.path_to_texts
+        files = os.listdir(os.path.join(path)) 
+        files.sort(key=lambda x: int(x.split('.')[0]))
+        count = 1
+        isNext = False
+        print('Start books')
+        for file in files:
+            try:
+                print(f"Current book: {file}. Count: {count}")
+                id_book = int(file.split('.')[0])
+                if isNext:
+                    if id_book == 2944:
+                        isNext = False
+                    else:
+                        count += 1
+                        continue
+                print(f'Book with id: {id_book} not exist in DataBase.')
+                text = get_text_by_path(os.path.join(path, file))
+                if not text:
+                   print("Text is empty")
+                   continue
+                sentences = get_sentences(text, nlp)
+                sentences = [review_to_words(str(s), stop_words) for s in sentences]
+                # for i in sentences:
+                #     print(i)
+                print('=============================================')
+                smart_cluster(sentences, model_for_clusters, id_book)
+                count += 1
             except Exception as e:
                 print(f"Error in {file}...")
                 print(str(e))
@@ -312,4 +449,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    good_main()

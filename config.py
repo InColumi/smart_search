@@ -1,5 +1,6 @@
 from pydantic import BaseSettings
 
+
 class Settings(BaseSettings):
     user_name: str
     password: str
@@ -13,4 +14,3 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-        

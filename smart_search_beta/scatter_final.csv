@@ -1,0 +1,111 @@
+value,cluster_id,new_cluster_id,matches
+Apples are a popular fruit.,0,0,1
+The color of apples can range from red to green.,0,0,1
+Apple trees belong to the Rosaceae family.,0,0,1
+Apple pie is a delicious dessert made with apples.,0,0,1
+You can make apple cider from fresh apples.,0,0,1
+Apple orchards are a common sight in the countryside.,0,0,1
+Apples can be eaten raw or used in various recipes.,0,0,1
+Apple seeds are found inside the core of the fruit.,0,0,1
+Apple picking is a fun activity during the harvest season.,0,0,1
+Apple sauce is a common accompaniment to pork dishes.,0,0,1
+"Horses are large, majestic animals.",1,1,1
+The average lifespan of a horse is around 25 to 30 years.,1,1,1
+Horses have a strong sense of hearing and eyesight.,1,1,1
+There are over 300 different breeds of horses.,1,1,1
+Horses are herbivores and mainly eat grass and hay.,1,1,1
+The fastest recorded speed of a horse was around 55 miles per hour.,1,1,1
+Horses are known for their strength and agility.,1,1,1
+Horses have been domesticated for thousands of years and have served humans in various roles.,1,1,1
+Horses communicate through a combination of vocalizations and body language.,1,1,1
+Horseback riding is a popular recreational activity and sport.,1,1,1
+Books are a great source of knowledge and entertainment.,2,2,1
+Reading books can broaden your perspective and enhance your imagination.,2,2,1
+"There are countless genres of books, including fiction, non-fiction, fantasy, and mystery.",2,2,1
+Books can transport you to different worlds and time periods.,2,2,1
+Many people enjoy collecting and building personal libraries of books.,2,2,1
+Books are often adapted into movies or TV shows.,2,2,1
+Libraries are important institutions that house vast collections of books for public access.,2,2,1
+"Books can be enjoyed in various formats, including hardcover, paperback, and e-books.",2,2,1
+Some famous authors have written timeless classics that are still widely read today.,2,2,1
+"Books have the power to inspire, educate, and evoke a range of emotions.",2,2,1
+Universities offer a wide range of academic programs and degrees.,3,3,1
+Higher education institutions provide opportunities for students to pursue their passions and interests.,3,3,1
+Universities often have diverse student populations from different backgrounds and cultures.,3,3,1
+"Research is an integral part of many universities, fostering innovation and knowledge creation.",3,3,1
+Universities provide a platform for intellectual growth and critical thinking.,3,3,1
+"Students at universities have access to various resources such as libraries, laboratories, and sports facilities.",3,3,1
+Universities offer extracurricular activities and clubs for students to engage in hobbies and develop new skills.,3,3,1
+Graduating from a reputable university can enhance career prospects and open doors to employment opportunities.,3,3,1
+Universities promote academic freedom and encourage students to express their opinions and engage in discussions.,3,3,1
+"Universities play a vital role in the advancement of society through education, research, and community outreach.",3,3,1
+"The man walked down the street, whistling a tune.",4,4,0
+Human beings have the capacity for both kindness and cruelty.,4,5,0
+It is important to treat every human with respect and dignity.,4,6,1
+The discovery of fire was a major milestone in the history of mankind.,4,6,0
+"The man gazed at the stars, contemplating the vastness of the universe.",4,7,1
+Human civilization has made significant advancements in science and technology.,4,7,0
+Every person has the right to live a life free from discrimination.,4,8,0
+The scientist conducted experiments to better understand the human brain.,4,9,0
+The man's compassionate actions touched the hearts of those around him.,4,10,0
+The study of anthropology explores the diversity of human cultures.,4,11,1
+Logic is the foundation of rational thinking and decision-making.,5,12,0
+The detective used deductive logic to solve the mysterious crime.,5,13,1
+Mathematical logic provides a formal framework for reasoning.,5,13,1
+The professor's lecture on symbolic logic was both challenging and enlightening.,5,13,1
+"In computer programming, logical operators are used to evaluate conditions.",5,13,0
+Critical thinking involves applying logic to analyze and evaluate arguments.,5,14,0
+The philosopher explored the limits of human logic and reason.,5,15,1
+The logic behind the theorem was elegant and well-reasoned.,5,15,1
+Inductive logic allows us to make generalizations based on specific observations.,5,15,0
+The debate centered around the logic and validity of the proposed argument.,5,16,1
+Water is essential for the survival of all living organisms.,6,17,1
+I always carry a water bottle with me to stay hydrated.,6,17,0
+The sound of water flowing is incredibly soothing.,6,18,0
+She dipped her toes in the cool water of the lake.,6,19,0
+"The rain poured down, drenching everything in water.",6,20,1
+The ocean is vast and filled with mysterious creatures.,6,20,1
+Plants need water to grow and thrive.,6,20,0
+The waterfall cascaded down the rocky cliff with great force.,6,21,0
+He jumped into the pool and felt the refreshing water against his skin.,6,22,0
+The boat sailed across the calm waters of the lake.,6,23,1
+The cat purred contentedly as it curled up on the cozy couch.,7,24,1
+I adopted a playful kitten and named her Luna.,7,24,1
+Cats are known for their agility and grace.,7,24,1
+The tabby cat stealthily approached its prey.,7,24,1
+"She brushed the cat's fur, making it shiny and soft.",7,24,1
+The curious cat climbed up the tall tree to explore.,7,24,1
+He was startled by a sudden meow from the neighboring garden.,7,24,0
+The cat stretched lazily in the warm sunlight.,7,25,0
+Cats have a natural instinct for hunting and catching mice.,7,26,0
+She couldn't resist the adorable face of the fluffy Persian cat.,7,27,1
+Football is a popular sport played around the world.,8,28,0
+She enjoys watching basketball and is a fan of the sport.,8,29,1
+"He participates in various sports, such as swimming and cycling.",8,29,1
+The Olympic Games showcase a wide range of sports and athletes.,8,29,1
+"She has a collection of sports memorabilia, including jerseys and signed baseballs.",8,29,1
+Playing sports helps improve physical fitness and coordination.,8,29,1
+"The sport of tennis requires skill, agility, and endurance.",8,29,0
+He aspires to become a professional athlete and compete at the highest level of his sport.,8,30,0
+"Sportsmanship is an important aspect of any sport, promoting fair play and respect.",8,31,0
+"The sport of boxing demands strength, strategy, and mental toughness.",8,32,1
+JavaScript is a widely-used programming language for building web applications.,9,33,1
+He enjoys coding in JavaScript and building interactive websites.,9,33,1
+The JavaScript framework allowed for faster development of the user interface.,9,33,1
+She attended a workshop to learn more about advanced JavaScript techniques.,9,33,1
+The website's functionality was enhanced with the use of JavaScript.,9,33,1
+He spent hours debugging his JavaScript code to fix the issue.,9,33,1
+JavaScript is known for its versatility and ability to run on different platforms.,9,33,1
+She contributed to an open-source JavaScript project to improve its features.,9,33,1
+The company was seeking candidates with strong JavaScript skills for their development team.,9,33,1
+The JavaScript library simplified the process of data visualization on the website.,9,33,0
+"Python is a versatile programming language used in web development, data analysis, and artificial intelligence.",10,33,1
+She enjoys coding in Python because of its simplicity and readability.,10,33,0
+The Python community is known for its active support and numerous libraries.,10,34,1
+He learned Python as his first programming language and quickly fell in love with it.,10,34,1
+"Python's syntax is easy to understand, making it an excellent choice for beginners.",10,34,1
+She used Python to automate repetitive tasks and save time.,10,34,1
+"The Python interpreter executes code line by line, making it easier to debug errors.",10,34,1
+Python's extensive standard library provides a wide range of functionality out of the box.,10,34,1
+He attended a Python conference to learn about the latest advancements in the language.,10,34,1
+The Python ecosystem offers powerful frameworks such as Django and Flask for web development.,10,34,1
